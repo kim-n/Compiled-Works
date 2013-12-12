@@ -1,0 +1,6 @@
+<div id="tagHTML">
+<select name="secret[tags]" id="secret_tags">
+  <% @tags.each do |tag| %>
+    <option value="<%= tag.id %>"><%= tag.body %></option>
+<% end %></select>
+</div>

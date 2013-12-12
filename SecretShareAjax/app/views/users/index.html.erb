@@ -1,0 +1,75 @@
+<h2>Index!</h2>
+
+<%= stylesheet_link_tag    :all %>
+<div>
+<% @users.each do |user| %>
+Username: <%= user.username %>
+<span class="friend-buttons <%= Friendship.can_friend?(current_user, user) ? "can-friend" : "can-unfriend" %>">
+
+   <button class="friend" data-id="<%= user.id %>">heeey</button>
+
+   <% can_unfriend = Friendship.can_unfriend?( current_user, user) %>
+   <button class="unfriend"
+     data-id="<%= user.id %>">unfriend!</button><br>
+   </span>
+<% end %>
+</div>
+
+
+
+<script>
+var toggleFriendButtons = function($el) {
+  $el.toggleClass("can-friend")
+  $el.toggleClass("can-unfriend")
+}
+
+$('div').on("click", ".friend", function(event) {
+  var $friend = $(event.currentTarget);
+  var friendId = parseInt($friend.attr("data-id"));
+
+  $friend.attr("disabled", "disabled");
+  $friend.html("friending...")
+
+
+  $.ajax({
+   url: '/users/' + friendId + '/friendships',
+   type: 'POST',
+   dataType: 'json',
+   success: function( resp ) {
+     toggleFriendButtons($friend.parent())
+     $friend.removeAttr("disabled");
+     $friend.html("heeey")
+   },
+   error: function( req, status, err ) {
+     $friend.removeAttr("disabled");
+     $friend.html("heeey")
+     alert( 'something went wrong: ' + status + err );
+   }
+  });
+})
+
+$('div').on("click", ".unfriend", function(event) {
+  var $friend = $(event.currentTarget);
+  var friendId = parseInt($friend.attr("data-id"));
+  $friend.attr("disabled", "disabled");
+  $friend.html("unfriending...")
+  $.ajax({
+   url: '/users/' + friendId + '/friendships',
+   type: 'DELETE',
+   dataType: 'json',
+   success: function( resp ) {
+     toggleFriendButtons($friend.parent())
+     $friend.removeAttr("disabled");
+     $friend.html("unfriend!")
+   },
+   error: function( req, status, err ) {
+     $friend.removeAttr("disabled");
+     $friend.html("unfriend!")
+     alert( 'something went wrong: ' + status + err );
+   }
+  });
+})
+
+
+
+</script>

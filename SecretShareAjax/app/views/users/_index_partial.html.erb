@@ -1,0 +1,7 @@
+<% @users.each do |user| %>
+Username: <%= user.username %>
+  <% if Friendship.can_friend?( current_user, user) %>
+    <%= button_to "Friend!", user_friendships_url(user), method: :post %>
+  <% end  %><br>
+
+<% end %>

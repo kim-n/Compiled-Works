@@ -1,0 +1,14 @@
+
+<p><%if( post.validationError ){ %>
+    <%= post.validationError.title %>
+    <% } %>
+</p>
+<label>Title</label>
+<input type="text" name="post[title]"
+value="<%= post.get("title") %>" >
+
+<label>Body</label>
+<input type="text" name="post[body]"
+value="<%= post.get("body") %>" >
+
+<input type="submit" value="New Post">
